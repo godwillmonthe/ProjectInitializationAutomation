@@ -3,23 +3,23 @@ import os
 from github import Github
 
 foldername = str(sys.argv[1])
-path = os.environ.get('mp')         # add projects dirctory to the env vars
+path = os.environ.get('mp')         # add projects directory to the env vars
 token = os.environ.get('gt')        # add github token to the env vars
-_dir = path + '/' + foldername
+_dir = path + foldername
+username = "godwillmonthe"
 
-g = Github(token)
-user = g.get_user()
-login = user.login
+user = Github(token).get_user()
 repo = user.create_repo(foldername)
 
-commands = [f'echo "# {repo.name}" >> README.md',
+commands = [f'echo # {repo.name} >> README.md',
             'git init',
-            f'git remote add origin https://github.com/{login}/{foldername}.git',
+            f'git remote add origin https://github.com/{username}/{foldername}.git',
             'git add .',
             'git commit -m "Initial commit"',
-            'git push -u origin master']
+            'git branch -M main',
+            'git push -u origin main']
 
-if sys.argv[2] == "g":
+if foldername == str(sys.argv[1]):
     os.mkdir(_dir)
     os.chdir(_dir)
 
@@ -27,7 +27,8 @@ if sys.argv[2] == "g":
         os.system(c)
 
     print(f'{foldername} created locally')
+    os.chdir(_dir)
     os.system('code .')
 
 else:
-    print("create <fldername>")
+    print("create <foldername>")
